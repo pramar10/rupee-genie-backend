@@ -30,7 +30,7 @@ exports.registerUser = async (req, res) => {
       password: hashPassword,
     });
     res.status(201).json({
-      success: true,
+      status: "201",
       message: "Registration successful",
       data: user,
     });
@@ -52,8 +52,7 @@ exports.login = async (req, res) => {
     user.refreshToken = refreshToken; // store in DB
     await user.save();
     res.status(200).json({
-      success: true,
-      message: "Success",
+      status: "200",
       user,
       accessToken,
     });
@@ -75,7 +74,7 @@ exports.refresh = async (req, res) => {
       expiresIn: "15m",
     });
 
-    res.status(200).json({ accessToken: newAccessToken });
+    res.status(200).json({ status: "200", accessToken: newAccessToken });
   } catch (error) {
     res.status(500).json({ error: error });
   }
@@ -85,7 +84,7 @@ exports.logout = async (req, res) => {
   try {
     const { refreshToken } = req.body;
     await User.findOneAndUpdate({ refreshToken }, { refreshToken: null });
-    res.json({ message: "Logged out successfully" });
+    res.json({ status: "200", message: "Logged out successfully" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -96,7 +95,7 @@ exports.getUserData = async (req, res) => {
   const id = req.body._id;
   try {
     const user = await User.findById(id);
-    return res.status(200).json({ success: true, user });
+    return res.status(200).json({ status: "200", user });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
